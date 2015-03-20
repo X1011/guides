@@ -1,13 +1,14 @@
 # Figaro
-The Figaro gem lets us declare environment variables, both locally and on heroku. To use it, first add the gem.
-
-    gem “figaro”
-
+The Figaro gem lets us declare environment variables, both locally and on heroku. To use it, first add it to your Gemfile:
+```ruby
+gem 'figaro'
+```
 Then, set it up with
 
+    bundle install
     figaro install
 
-This creates config/application.yml, a simple yaml file, as well as adds that file to your gitignore. Figaro sets these values to your ENV hash (or the proxy Figaro.env).You can use it in your app like this:
+This creates config/application.yml, a simple yaml file, as well as adds that file to your gitignore. Figaro sets these values to your ENV hash (or the proxy Figaro.env). You can use it in your app like this:
 
     client = Twitter::REST::Client.new do |config|
       config.consumer_key        = Figaro.env.tw_c_key
