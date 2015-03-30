@@ -32,6 +32,24 @@ Set up the app's dependencies.
     cd project
     ./bin/setup
 
+Or, if a setup script is not provided:
+
+* install RubyGems and rbenv
+* `pushd ~/.rbenv/plugins/ruby-build && git pull && popd` #(just makes sure rbenv is up to date)
+* `rbenv install`
+* `gem update`
+* `bin/bundle install`
+* install and start PostgreSQL
+* `bin/rake db:create db:migrate`
+	* if you get the error `PG::InvalidParameterValue: ERROR:  new encoding (UTF8) is incompatible with the encoding of the template database (SQL_ASCII)`, you'll need to [change the template's encoding](https://gist.github.com/amolkhanorkar-webonise/8706915) by running `psql` and executing these commands inside:
+	  
+	  ```PLpgSQL
+	  UPDATE pg_database SET datistemplate=FALSE WHERE datname='template1';
+	  DROP DATABASE template1;
+	  CREATE DATABASE template1 WITH template=template0 encoding='UTF8';
+	  UPDATE pg_database SET datistemplate=TRUE WHERE datname='template1';
+	  ```
+
 Use [Heroku config](https://github.com/ddollar/heroku-config) to get `ENV`
 variables.
 
@@ -46,6 +64,10 @@ Use [Foreman](https://github.com/ddollar/foreman) to run the app locally.
 
 It uses your `.env` file and `Procfile` to run processes
 like Heroku's [Cedar](https://devcenter.heroku.com/articles/cedar/) stack.
+
+Run [`guard`](https://github.com/guard/guard), and keep it running while you develop. It will automatically run [RSpec](https://github.com/guard/guard-rspec) tests when you edit the relevent files and report the results in the console, and it will automatically refresh web pages in the app when you edit them, via [LiveReload](https://github.com/guard/guard-livereload).
+
+When running command line tools, use the binstubs in `bin/`, for example, `bin/rspec`. They will run using [Spring](https://github.com/rails/spring), which will cut down on startup time. If you don't want to type `bin/` all the time, you can [add it to your path](https://github.com/rails/spring#setup).
 
 Git Protocol
 ------------
